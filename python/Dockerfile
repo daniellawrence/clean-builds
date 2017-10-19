@@ -1,7 +1,7 @@
 FROM debian:latest
 
 RUN apt update
-RUN apt install -y curl build-essential git fpm
+RUN apt install -y curl build-essential git
 
 RUN apt install -y libbz2-dev libsqlite3-dev libreadline-dev zlib1g-dev libncurses5-dev libssl-dev libgdbm-dev lzma-dev
 
