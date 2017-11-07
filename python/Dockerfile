@@ -1,16 +1,18 @@
 FROM debian:latest
 
 RUN apt update
-RUN apt install -y curl build-essential git
+RUN apt install -y wget build-essential git
+RUN wget https://github.com/daniellawrence/debbie/raw/master/output/debbie_0.0.1_all.deb
+RUN dpkg -i debbie_0.0.1_all.deb
 
 RUN apt install -y libbz2-dev libsqlite3-dev libreadline-dev zlib1g-dev libncurses5-dev libssl-dev libgdbm-dev lzma-dev
 
-RUN curl https://www.python.org/ftp/python/3.6.3/Python-3.6.3.tgz -o python.tgz
-RUN tar xf python.tgz
+RUN wget https://www.python.org/ftp/python/3.6.3/Python-3.6.3.tgz
+RUN tar xf Python-3.6.3.tgz
 WORKDIR Python-3.6.3
-RUN ./configure --prefix=/usr/local/python36 --enable-optimizations
+RUN ./configure --prefix=/fakeroot/usr/local/python36 --enable-optimizations
 RUN make -j 10
 RUN make install
-RUN tar cf - /usr/local/python36 | gzip -9 > /python36.tgz
-RUN ls -lh /python36.tgz
+WORKDIR /
+RUN /usr/local/bin/debbie -name python36 -path /fakeroot -v 3.6.3
 CMD /bin/bash
