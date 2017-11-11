@@ -2,8 +2,6 @@ FROM debian:latest
 
 RUN apt update
 RUN apt install -y wget build-essential git
-RUN wget https://github.com/daniellawrence/debbie/raw/master/output/debbie_0.0.1_all.deb
-RUN dpkg -i debbie_0.0.1_all.deb
 
 RUN apt install -y libbz2-dev libsqlite3-dev libreadline-dev zlib1g-dev libncurses5-dev libssl-dev libgdbm-dev lzma-dev
 
@@ -14,5 +12,14 @@ RUN ./configure --prefix=/fakeroot/usr/local/python36 --enable-optimizations
 RUN make -j 10
 RUN make install
 WORKDIR /
-RUN /usr/local/bin/debbie -name python36 -path /fakeroot -v 3.6.3
+
+# Install debbie the fast debian packager
+RUN wget https://github.com/daniellawrence/debbie/raw/master/output/debbie_0.0.2_all.deb
+RUN dpkg -i debbie_0.0.2_all.deb
+
+# Install he package for testing
+RUN /usr/local/bin/debbie -name DSLpython36 -path /fakeroot -version 3.6.3
+RUN dpkg -i /tmp/DSL*deb
+RUN /usr/local/python36/bin/python3 -c 'import sys;print(sys.version)'
+
 CMD /bin/bash
